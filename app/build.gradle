@@ -14,12 +14,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"https://api.unsplash.com/v1/\"")
-            buildConfigField("String", "ACCESS_KEY", "f877605b7cd2a359f89ab7d498f905c947246a141c445a3c5c03e8d71c890d2c")
+            buildConfigField("String", "BASE_URL", "\"https://api.unsplash.com/\"")
+            buildConfigField("String", "ACCESS_KEY", "\"f877605b7cd2a359f89ab7d498f905c947246a141c445a3c5c03e8d71c890d2c\"")
         }
-        debug{
-            buildConfigField("String", "BASE_URL", "\"https://api.unsplash.com/v1/\"")
-            buildConfigField("String", "ACCESS_KEY", "f877605b7cd2a359f89ab7d498f905c947246a141c445a3c5c03e8d71c890d2c")
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://api.unsplash.com/\"")
+            buildConfigField("String", "ACCESS_KEY", "\"f877605b7cd2a359f89ab7d498f905c947246a141c445a3c5c03e8d71c890d2c\"")
         }
     }
 }
