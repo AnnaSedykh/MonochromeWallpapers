@@ -1,6 +1,9 @@
 package com.annasedykh.monochromewallpapers.photo;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +24,15 @@ import butterknife.ButterKnife;
 /**
  * {@link PhotoAdapter} displays a scrolling grid of {@link Photo} photos using RecyclerView.
  */
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>{    
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
     private List<Photo> data = new ArrayList<>();
 
     /**
      * Create new views (invoked by the layout manager)
      */
+    @NonNull
     @Override
-    public PhotoAdapter.PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PhotoAdapter.PhotoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo, parent, false);
         return new PhotoViewHolder(view);
     }
@@ -37,7 +41,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
      * Replace the contents of a view (invoked by the layout manager)
      */
     @Override
-    public void onBindViewHolder(PhotoAdapter.PhotoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PhotoAdapter.PhotoViewHolder holder, int position) {
         Photo photo = data.get(position);
         holder.bind(photo);
     }
@@ -63,6 +67,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
      * {@link PhotoViewHolder} provide a reference to the views for each photo
      */
     static class PhotoViewHolder extends RecyclerView.ViewHolder {
+        private static final double THUMB_SIDE_RATIO = 0.5625; // 1080 / 1920
+
         @BindView(R.id.thumbnail)
         ImageView thumbnail;
         private Context context;
@@ -70,7 +76,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         /**
          * {@link PhotoViewHolder} constructor
          */
-        public PhotoViewHolder(View itemView) {
+        PhotoViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             context = itemView.getContext();
@@ -79,34 +85,36 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         /**
          * Binds view with photo
          */
-        public void bind(final Photo photo) {
+        void bind(final Photo photo) {
             String downloadThumbnailUrl = photo.getPhotoUrls().get(Photo.SMALL_SIZE);
-            String downloadFullUrl = photo.getPhotoUrls().get(Photo.FULL_SIZE);
+            final String downloadFullUrl = photo.getPhotoUrls().get(Photo.FULL_SIZE);
             String incrementLink = photo.getLinks().get(Photo.DOWNLOAD_INCREMENT);
 
-            int width = context.getResources().getDisplayMetrics().widthPixels;
-            int columns = MainActivity.COLUMN_NUMBER;
+            // Count thumbnail size
+            int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+            double thumbWidth = screenWidth / MainActivity.COLUMN_NUMBER;
+            double thumbHeight = thumbWidth / THUMB_SIDE_RATIO;
 
             try {
                 Glide.with(context)
                         .load(downloadThumbnailUrl)
                         .apply(new RequestOptions()
                                 .centerCrop()
-                                .override(width / columns, width / columns))
+                                .override((int) thumbWidth, (int) thumbHeight))
                         .into(thumbnail);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (!infoLink.isEmpty()) {
-//                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(infoLink));
-//                        context.startActivity(browserIntent);
-//                    }
-//                }
-//            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!downloadFullUrl.isEmpty()) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadFullUrl));
+                        context.startActivity(browserIntent);
+                    }
+                }
+            });
         }
     }
 }

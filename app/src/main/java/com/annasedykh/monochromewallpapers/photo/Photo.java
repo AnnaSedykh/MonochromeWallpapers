@@ -16,6 +16,10 @@ public class Photo {
 
     /** Photo id */
     private String id;
+    /** Photo width */
+    private int width;
+    /** Photo height */
+    private int height;
     /** A list of photo urls */
     @SerializedName("urls")
     private Map<String, String> photoUrls;
@@ -26,23 +30,19 @@ public class Photo {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public Map<String, String> getPhotoUrls() {
         return photoUrls;
     }
 
-    public void setPhotoUrls(Map<String, String> photoUrls) {
-        this.photoUrls = photoUrls;
-    }
-
     public Map<String, String> getLinks() {
         return links;
-    }
-
-    public void setLinks(Map<String, String> links) {
-        this.links = links;
     }
 }

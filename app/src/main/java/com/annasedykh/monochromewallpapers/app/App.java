@@ -18,6 +18,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 /**
  * {@link App} configures Retrofit2 and creates {@link Api} instance.
  */
@@ -58,7 +59,7 @@ public class App extends Application {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
+           Request request = chain.request();
             HttpUrl url = request.url();
             HttpUrl newUrl = url.newBuilder().addQueryParameter("client_id", BuildConfig.ACCESS_KEY).build();
             Request newRequest = request.newBuilder().url(newUrl).build();
