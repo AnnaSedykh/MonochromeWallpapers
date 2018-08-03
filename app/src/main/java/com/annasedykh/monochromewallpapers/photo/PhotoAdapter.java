@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.annasedykh.monochromewallpapers.MainActivity;
+import com.annasedykh.monochromewallpapers.PreviewActivity;
 import com.annasedykh.monochromewallpapers.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -110,8 +111,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                 @Override
                 public void onClick(View view) {
                     if (!downloadFullUrl.isEmpty()) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadFullUrl));
-                        context.startActivity(browserIntent);
+                        Intent preview = new Intent(context, PreviewActivity.class);
+                        preview.putExtra("fullUrl", downloadFullUrl);
+                        preview.putExtra("id", photo.getId());
+                        context.startActivity(preview);
                     }
                 }
             });
