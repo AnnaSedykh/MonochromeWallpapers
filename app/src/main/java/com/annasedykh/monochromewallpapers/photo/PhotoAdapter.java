@@ -2,7 +2,6 @@ package com.annasedykh.monochromewallpapers.photo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import com.annasedykh.monochromewallpapers.MainActivity;
 import com.annasedykh.monochromewallpapers.PreviewActivity;
 import com.annasedykh.monochromewallpapers.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -101,6 +101,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                         .load(downloadThumbnailUrl)
                         .apply(new RequestOptions()
                                 .centerCrop()
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .override((int) thumbWidth, (int) thumbHeight))
                         .into(thumbnail);
             } catch (Exception e) {

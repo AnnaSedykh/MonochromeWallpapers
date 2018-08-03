@@ -1,6 +1,5 @@
 package com.annasedykh.monochromewallpapers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,6 +21,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * {@link MainActivity} shows a scrolling grid of photos
+ */
 public class MainActivity extends AppCompatActivity {
     public static final int COLUMN_NUMBER = 3;
     private static final String TAG = "MainActivity";

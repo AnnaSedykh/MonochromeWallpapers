@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.annasedykh.monochromewallpapers.api.Api;
+import com.annasedykh.monochromewallpapers.app.App;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,10 +28,18 @@ import java.io.OutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+/**
+ * {@link PreviewActivity} shows the selected photo with the ability to download or set as wallpaper
+ */
 public class PreviewActivity extends AppCompatActivity {
+    private static final String TAG = "PreviewActivity";
     private String photoId;
     private Bitmap image;
+    private Api api;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -42,6 +53,9 @@ public class PreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
         ButterKnife.bind(this);
+
+        App app = (App) getApplication();
+        api = app.getApi();
 
         photoId = getIntent().getStringExtra("id");
         String fullUrl = getIntent().getStringExtra("fullUrl");
@@ -79,6 +93,7 @@ public class PreviewActivity extends AppCompatActivity {
         try {
             wallManager.setBitmap(image);
             Toast.makeText(this, "SETTING WALLPAPER SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+            incrementPhotoDownloads();
         } catch (IOException e) {
             Toast.makeText(this, "SETTING WALLPAPER FAILED", Toast.LENGTH_SHORT).show();
         }
@@ -88,6 +103,26 @@ public class PreviewActivity extends AppCompatActivity {
     public void downloadPhoto() {
         getImageAsBitmap();
         saveImage(image);
+        incrementPhotoDownloads();
+    }
+
+    private void incrementPhotoDownloads() {
+        Call<Object> call =  api.incrementDownloads(photoId);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if(BuildConfig.DEBUG) {
+                    Log.i(TAG, "search onResponse: " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                if(BuildConfig.DEBUG) {
+                    Log.w(TAG, "search onFailure: ", t);
+                }
+            }
+        });
     }
 
     private void getImageAsBitmap() {
