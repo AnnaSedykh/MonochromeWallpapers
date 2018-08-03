@@ -57,12 +57,14 @@ public class MainActivity extends AppCompatActivity {
      * Query the Unsplash API dataset and return a list of {@link Photo} objects.
      */
     private void loadData() {
-        Call<PhotoSearchResult> call = api.searchPhotos("green", 1, 30, Photo.ORIENTATION_PORTRAIT);
+        Call<PhotoSearchResult> call = api.searchPhotos("pink", 1, 30, Photo.ORIENTATION_PORTRAIT);
         //Call is executed asynchronously
         call.enqueue(new Callback<PhotoSearchResult>() {
             @Override
             public void onResponse(Call<PhotoSearchResult> call, Response<PhotoSearchResult> response) {
-                Log.i(TAG, "search onResponse: ");
+                if(BuildConfig.DEBUG) {
+                    Log.i(TAG, "search onResponse: ");
+                }
                 PhotoSearchResult result = response.body();
                 if (result != null && result.getTotal() > 0) {
                     adapter.setData(result.getPhotos());
@@ -72,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PhotoSearchResult> call, Throwable t) {
-                Log.w(TAG, "search onFailure: ", t);
+                if(BuildConfig.DEBUG) {
+                    Log.w(TAG, "search onFailure: ", t);
+                }
             }
         });
     }
