@@ -1,11 +1,16 @@
 package com.annasedykh.monochromewallpapers;
 
+import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,6 +42,7 @@ import retrofit2.Response;
  */
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
     private String photoId;
     private Bitmap image;
     private Api api;
@@ -93,36 +99,68 @@ public class PreviewActivity extends AppCompatActivity {
         WallpaperManager wallManager = WallpaperManager.getInstance(getApplicationContext());
         try {
             wallManager.setBitmap(image);
-            Toast.makeText(this, "SETTING WALLPAPER SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.wallpaper_success), Toast.LENGTH_SHORT).show();
             incrementPhotoDownloads();
         } catch (IOException e) {
-            Toast.makeText(this, "SETTING WALLPAPER FAILED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.wallpaper_fail), Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.btn_download)
     public void downloadPhoto() {
-        getImageAsBitmap();
-        saveImage(image);
-        incrementPhotoDownloads();
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        } else {
+            if (isExternalStorageWritable()) {
+                getImageAsBitmap();
+                saveImage(image);
+                incrementPhotoDownloads();
+            } else {
+                Toast.makeText(this, getString(R.string.external_storage_not_available), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // Checks if external storage is available for write
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    downloadPhoto();
+                } else {
+                    Toast.makeText(this, getString(R.string.permission_storage_denied), Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 
     /**
      * Query the Unsplash API to trigger increment of photo downloads
      */
     private void incrementPhotoDownloads() {
-        Call<Object> call =  api.incrementDownloads(photoId);
+        Call<Object> call = api.incrementDownloads(photoId);
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     Log.i(TAG, "search onResponse: " + response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     Log.w(TAG, "search onFailure: ", t);
                 }
             }
@@ -130,7 +168,7 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void getImageAsBitmap() {
-        if(image == null) {
+        if (image == null) {
             photo.buildDrawingCache();
             image = photo.getDrawingCache();
         }
@@ -140,8 +178,8 @@ public class PreviewActivity extends AppCompatActivity {
         String savedImagePath = null;
 
         String imageFileName = "JPEG_" + photoId + ".jpg";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + "/MonochromeWallpapers");
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "MonochromeWallpapers");
         boolean success = true;
         if (!storageDir.exists()) {
             success = storageDir.mkdirs();
