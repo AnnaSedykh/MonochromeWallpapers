@@ -32,12 +32,13 @@ import retrofit2.Response;
  * {@link MainActivity} shows a scrolling grid of photos
  */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     public static final int COLUMN_NUMBER = 3;
     private static final int MARGIN_TOP = 200;
-    private static final String TAG = "MainActivity";
 
     private Api api;
     private PhotoAdapter adapter;
+    private PopupWindow popupWindow;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         recycler.setLayoutManager(new GridLayoutManager(this, COLUMN_NUMBER));
         recycler.setAdapter(adapter);
 
-        loadData();
+        loadPhotos("red");
     }
 
     @Override
@@ -77,10 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
                 int width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+                popupWindow = new PopupWindow(popupView, width, height, true);
 
                 int posX = MainActivity.this.getResources().getDisplayMetrics().widthPixels;
                 popupWindow.showAtLocation(recycler, Gravity.NO_GRAVITY, posX, MARGIN_TOP);
+
+                initColorViews(popupView);
 
                 // dismiss the popup window when touched
                 popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -97,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Query the Unsplash API dataset and return a list of {@link Photo} objects.
+     * Query the Unsplash API dataset and return a list of {@link Photo} objects of chosen color.
      */
-    private void loadData() {
-        Call<PhotoSearchResult> call = api.searchPhotos("pink", 1, 30, Photo.ORIENTATION_PORTRAIT);
+    private void loadPhotos(String color) {
+        Call<PhotoSearchResult> call = api.searchPhotos(color, 1, 30, Photo.ORIENTATION_PORTRAIT);
         //Call is executed asynchronously
         call.enqueue(new Callback<PhotoSearchResult>() {
             @Override
@@ -122,5 +125,73 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Find color views in popupView and set OnColorClickListener
+     */
+    private void initColorViews(View popupView) {
+        View beigeView = popupView.findViewById(R.id.color_beige);
+        beigeView.setOnClickListener(new OnColorClickListener(getString(R.string.beige)));
+
+        View blackView = popupView.findViewById(R.id.color_black);
+        blackView.setOnClickListener(new OnColorClickListener(getString(R.string.black)));
+
+        View blueView = popupView.findViewById(R.id.color_blue);
+        blueView.setOnClickListener(new OnColorClickListener(getString(R.string.blue)));
+
+        View brownView = popupView.findViewById(R.id.color_brown);
+        brownView.setOnClickListener(new OnColorClickListener(getString(R.string.brown)));
+
+        View darkGreenView = popupView.findViewById(R.id.color_dark_green);
+        darkGreenView.setOnClickListener(new OnColorClickListener(getString(R.string.dark_green)));
+
+        View darkRedView = popupView.findViewById(R.id.color_dark_red);
+        darkRedView.setOnClickListener(new OnColorClickListener(getString(R.string.dark_red)));
+
+        View greenView = popupView.findViewById(R.id.color_green);
+        greenView.setOnClickListener(new OnColorClickListener(getString(R.string.green)));
+
+        View greyView = popupView.findViewById(R.id.color_grey);
+        greyView.setOnClickListener(new OnColorClickListener(getString(R.string.grey)));
+
+        View navyView = popupView.findViewById(R.id.color_navy);
+        navyView.setOnClickListener(new OnColorClickListener(getString(R.string.navy)));
+
+        View orangeView = popupView.findViewById(R.id.color_orange);
+        orangeView.setOnClickListener(new OnColorClickListener(getString(R.string.orange)));
+
+        View pinkView = popupView.findViewById(R.id.color_pink);
+        pinkView.setOnClickListener(new OnColorClickListener(getString(R.string.pink)));
+
+        View purpleView = popupView.findViewById(R.id.color_purple);
+        purpleView.setOnClickListener(new OnColorClickListener(getString(R.string.purple)));
+
+        View redView = popupView.findViewById(R.id.color_red);
+        redView.setOnClickListener(new OnColorClickListener(getString(R.string.red)));
+
+        View turquoiseView = popupView.findViewById(R.id.color_turquoise);
+        turquoiseView.setOnClickListener(new OnColorClickListener(getString(R.string.turquoise)));
+
+        View whiteView = popupView.findViewById(R.id.color_white);
+        whiteView.setOnClickListener(new OnColorClickListener(getString(R.string.white)));
+
+        View yellowView = popupView.findViewById(R.id.color_yellow);
+        yellowView.setOnClickListener(new OnColorClickListener(getString(R.string.yellow)));
+    }
+
+
+    private class OnColorClickListener implements View.OnClickListener{
+        private String color;
+
+        OnColorClickListener(String color) {
+            this.color = color;
+        }
+
+        @Override
+        public void onClick(View v) {
+            loadPhotos(color);
+            popupWindow.dismiss();
+        }
     }
 }

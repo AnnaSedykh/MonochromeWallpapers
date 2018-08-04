@@ -3,15 +3,25 @@
     <string name="photo_download">DOWNLOAD</string>
     <string name="photo_set">SET</string>
 
+    <string name="permission_storage_denied">You have not given permission to access the gallery</string>
+    <string name="permission_wallpaper_denied">You have not given permission to set the Wallpaper</string>
+
     <string name="choose_color">Choose color</string>
+    <string name="beige">beige</string>
     <string name="black">black</string>
     <string name="blue">blue</string>
+    <string name="brown">brown</string>
+    <string name="dark_green">dark green</string>
+    <string name="dark_red">dark red</string>
     <string name="green">green</string>
+    <string name="grey">grey</string>
     <string name="navy">navy</string>
     <string name="orange">orange</string>
     <string name="pink">pink</string>
     <string name="purple">purple</string>
     <string name="red">red</string>
+    <string name="turquoise">turquoise</string>
     <string name="white">white</string>
     <string name="yellow">yellow</string>
+
 </resources>
