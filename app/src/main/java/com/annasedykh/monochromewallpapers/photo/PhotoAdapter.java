@@ -89,7 +89,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         void bind(final Photo photo) {
             String downloadThumbnailUrl = photo.getPhotoUrls().get(Photo.SMALL_SIZE);
             final String downloadFullUrl = photo.getPhotoUrls().get(Photo.FULL_SIZE);
-            String incrementLink = photo.getLinks().get(Photo.DOWNLOAD_INCREMENT);
 
             // Count thumbnail size
             int screenWidth = context.getResources().getDisplayMetrics().widthPixels;

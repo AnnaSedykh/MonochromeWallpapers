@@ -75,6 +75,7 @@ public class PreviewActivity extends AppCompatActivity {
     private void setToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
     }
 
     @Override
@@ -106,6 +107,9 @@ public class PreviewActivity extends AppCompatActivity {
         incrementPhotoDownloads();
     }
 
+    /**
+     * Query the Unsplash API to trigger increment of photo downloads
+     */
     private void incrementPhotoDownloads() {
         Call<Object> call =  api.incrementDownloads(photoId);
         call.enqueue(new Callback<Object>() {
