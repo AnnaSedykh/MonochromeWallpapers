@@ -4,7 +4,9 @@
     <string name="photo_set">SET</string>
 
     <string name="permission_storage_denied">You have not given permission to access the gallery</string>
-    <string name="permission_wallpaper_denied">You have not given permission to set the Wallpaper</string>
+    <string name="wallpaper_success">Setting wallpaper SUCCESSFULLY!</string>
+    <string name="wallpaper_fail">Setting wallpaper FAILED!</string>
+    <string name="external_storage_not_available">External storage not available!</string>
 
     <string name="choose_color">Choose color</string>
     <string name="beige">beige</string>
