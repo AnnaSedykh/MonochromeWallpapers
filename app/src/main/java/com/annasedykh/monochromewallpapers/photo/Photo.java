@@ -12,7 +12,6 @@ public class Photo {
     public static final String ORIENTATION_PORTRAIT = "portrait";
     public static final String FULL_SIZE = "full";
     public static final String SMALL_SIZE = "small";
-    public static final String DOWNLOAD_INCREMENT = "download_location";
 
     /** Photo id */
     private String id;
@@ -23,8 +22,6 @@ public class Photo {
     /** A list of photo urls */
     @SerializedName("urls")
     private Map<String, String> photoUrls;
-    /** A list of special links */
-    private Map<String, String> links;
 
     public String getId() {
         return id;
@@ -42,7 +39,4 @@ public class Photo {
         return photoUrls;
     }
 
-    public Map<String, String> getLinks() {
-        return links;
-    }
 }

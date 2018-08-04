@@ -2,4 +2,16 @@
     <string name="app_name">Monochrome Wallpapers</string>
     <string name="photo_download">DOWNLOAD</string>
     <string name="photo_set">SET</string>
+
+    <string name="choose_color">Choose color</string>
+    <string name="black">black</string>
+    <string name="blue">blue</string>
+    <string name="green">green</string>
+    <string name="navy">navy</string>
+    <string name="orange">orange</string>
+    <string name="pink">pink</string>
+    <string name="purple">purple</string>
+    <string name="red">red</string>
+    <string name="white">white</string>
+    <string name="yellow">yellow</string>
 </resources>
